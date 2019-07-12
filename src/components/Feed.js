@@ -19,6 +19,13 @@ import Notificacao from '../api/Notificacao';
 
 type Props = {};
 export default class Feed extends Component<Props> {
+  static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state;
+    
+    return {
+      title: params ? params.otherParam : 'A Nested Details Screen',
+    }
+  };
 
   constructor () {
     super();
@@ -101,6 +108,14 @@ export default class Feed extends Component<Props> {
     .catch(e => Notificacao.exibe('Ops', 'Não foi possível adicionar um novo comentário.'));
 
   }
+  
+  verPerfilUsuario(idFoto) {
+    /* 2. Read the params from the navigation state */
+    const { params } = this.props.navigation.state;
+    const foto = this.state.fotos.find(foto=>foto.id === idFoto);
+    this.props.navigation.setParams({title: foto.loginUsuario})
+    this.props.navigation.navigate(`Perfil de Usuario`);
+  }
 
   render() {
 
@@ -111,7 +126,8 @@ export default class Feed extends Component<Props> {
         renderItem={ ({item}) => 
           <Post foto={item} 
             likeCallback={this.like.bind(this)}
-            comentarioCallback={this.adicionaComentario.bind(this)}></Post>
+            comentarioCallback={this.adicionaComentario.bind(this)}
+            verPerfilCallback={this.verPerfilUsuario.bind(this)}></Post>
         }>
       </FlatList>
     );
